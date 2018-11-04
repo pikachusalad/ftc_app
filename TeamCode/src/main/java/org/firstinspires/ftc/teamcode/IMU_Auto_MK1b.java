@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -50,6 +51,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
  *
  * @see <a href="http://www.adafruit.com/products/2472">Adafruit IMU</a>
  */
+@Disabled
 @Autonomous(name = "IMU_Auto_MK1b", group = "IMU1")
 public class IMU_Auto_MK1b extends LinearOpMode
     {
@@ -58,7 +60,7 @@ public class IMU_Auto_MK1b extends LinearOpMode
     //----------------------------------------------------------------------------------------------
 
     // The IMU sensor object
-    BNO055IMU imu;
+    private BNO055IMU imu;
     private DcMotor FL = null;
     private DcMotor FR = null;
     private DcMotor[] LeftMotors = new DcMotor[1];// = {FL};
@@ -66,11 +68,11 @@ public class IMU_Auto_MK1b extends LinearOpMode
     private DcMotor[] AllMotors = new DcMotor[2];// = {FL, FR};
     private ElapsedTime runtime = new ElapsedTime();
 
-    private static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // REV Hex HD 40:1
+    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // REV Hex HD 40:1
     static final double     WHEEL_DIAMETER_INCHES   = 3.54331;     // For figuring circumference
     static final double     WHEEL_CIRCUMFERENCE_INCHES = WHEEL_DIAMETER_INCHES * Math.PI;
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV  / WHEEL_CIRCUMFERENCE_INCHES);
-    static final double     DRIVE_SPEED             = 0.3;
+    static final double     MOTOR_POWER = 0.3;
 
     // State used for updating telemetry
     Orientation angles;
@@ -125,16 +127,16 @@ public class IMU_Auto_MK1b extends LinearOpMode
         // Start the logging of measured acceleration
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
-        DriveEncoder(DRIVE_SPEED, 24);
+        DriveEncoder(MOTOR_POWER, 24);
         sleep(1000);
-        Turn(90, DRIVE_SPEED);
+        Turn(90, MOTOR_POWER);
         sleep(1000);
-        DriveEncoder(DRIVE_SPEED, 12);
+        DriveEncoder(MOTOR_POWER, 12);
         sleep(1000);
-        Turn(90,DRIVE_SPEED);
+        Turn(90, MOTOR_POWER);
         sleep(1000);
-        DriveEncoder(DRIVE_SPEED, 24);
-        Turn(-90, DRIVE_SPEED);
+        DriveEncoder(MOTOR_POWER, 24);
+        Turn(-90, MOTOR_POWER);
 
         StopDriving();
     }

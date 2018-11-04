@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -47,7 +48,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-
+@Disabled
 @Autonomous(name="MK_Auto2", group="Auto2")
 
 public class Auto2 extends LinearOpMode {
@@ -123,22 +124,17 @@ public class Auto2 extends LinearOpMode {
     }
 
     public void DriveEncoder(double speed, double inches) {
-        int newLeftTarget;
-        int newRightTarget;
-
-        FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        int targetTicks;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
+            // reset encoder to 0
+            FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            // Determine new target position, and pass to motor controller
-//            newLeftTarget = FL.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
-//            newRightTarget = FR.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
-            newLeftTarget = (int) (inches * COUNTS_PER_INCH);
-            newRightTarget = (int) (inches * COUNTS_PER_INCH);
-            FL.setTargetPosition(newLeftTarget);
-            FR.setTargetPosition(newRightTarget);
+            targetTicks = (int) (inches * COUNTS_PER_INCH);
+            FL.setTargetPosition(targetTicks);
+            FR.setTargetPosition(targetTicks);
 
             // Turn On RUN_TO_POSITION
             FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -147,18 +143,12 @@ public class Auto2 extends LinearOpMode {
             FL.setPower(speed);
             FR.setPower(speed);
 
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            // now just sit around and wait until the motors aren't busy
             while (opModeIsActive() && (FL.isBusy() && FR.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("right target", newRightTarget);
+                telemetry.addData("target", targetTicks);
                 telemetry.addData("right current", FR.getCurrentPosition());
-                telemetry.addData("left target", newLeftTarget);
                 telemetry.addData("left current", FL.getCurrentPosition());
                 telemetry.update();
             }
@@ -169,7 +159,6 @@ public class Auto2 extends LinearOpMode {
             FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            //  sleep(250);   // optional pause after each move
         }
     }
 
@@ -192,8 +181,6 @@ public class Auto2 extends LinearOpMode {
     }
 
     public void TurnRight() throws InterruptedException {
-//        FL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        FR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         telemetry.addData("RightTurn", "Start");
         telemetry.update();
         FL.setPower(1);

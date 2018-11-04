@@ -56,6 +56,7 @@ import java.util.Locale;
  *
  * @see <a href="http://www.adafruit.com/products/2472">Adafruit IMU</a>
  */
+@Disabled
 @Autonomous(name = "IMU_Auto_MK1", group = "IMU1")
 public class IMU_Auto_MK1 extends LinearOpMode
     {
